@@ -1,10 +1,13 @@
 package com.hariwr.praktikum12.ui.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -22,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hariwr.praktikum12.R
+import com.hariwr.praktikum12.data.Mahasiswa
 import com.hariwr.praktikum12.navigation.CostumeTopAppBar
 import com.hariwr.praktikum12.navigation.DestinasiNavigasi
 import com.hariwr.praktikum12.ui.viewmodel.HomeViewModel
@@ -74,6 +78,7 @@ fun HomeScreen(
         )
     }
 }
+
 @Composable
 fun OnLoading(modifier: Modifier = Modifier) {
     Image(
@@ -101,3 +106,28 @@ fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun MhsLayout(
+    mahasiswa: List<Mahasiswa>,
+    modifier: Modifier = Modifier,
+    onDetailClick: (Mahasiswa) -> Unit,
+    onDeleteClick: (Mahasiswa) -> Unit = {}
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(mahasiswa) { mahasiswa ->
+            MhsCard(
+                mahasiswa = mahasiswa,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onDetailClick(mahasiswa) },
+                onDeleteClick = {
+                    onDeleteClick(mahasiswa)
+                }
+            )
+        }
+    }
+}
