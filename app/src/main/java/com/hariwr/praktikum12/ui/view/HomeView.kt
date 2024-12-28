@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -79,16 +81,15 @@ fun HomeScreen(
     ) { innerPadding ->
         HomeStatus(
             homeUiState = viewModel.mhsUIState,
-            retryAction = { viewModel.getMhs() },
-            modifier = Modifier.padding(innerPadding),
-            onDetailClick = onDetailClick,
-            onDeleteClick = {
+            retryAction = { viewModel.getMhs() }, modifier = Modifier.padding(innerPadding),
+            onDetailClick = onDetailClick, onDeleteClick = {
                 viewModel.deleteMhs(it.nim)
                 viewModel.getMhs()
             }
         )
     }
 }
+
 @Composable
 fun HomeStatus(
     homeUiState: HomeUiState,
@@ -96,33 +97,34 @@ fun HomeStatus(
     modifier: Modifier = Modifier,
     onDeleteClick: (Mahasiswa) -> Unit = {},
     onDetailClick: (String) -> Unit
-){
-    when (homeUiState){
-        is HomeUiState.Loading-> OnLoading(modifier = modifier.fillMaxSize())
+) {
+    when (homeUiState) {
+        is HomeUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
 
         is HomeUiState.Success ->
-            if(homeUiState.mahasiswa.isEmpty()){
-                return Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+            if (homeUiState.mahasiswa.isEmpty()) {
+                return Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(text = "Tidak ada data kontak")
                 }
-            }else{
+            } else {
                 MhsLayout(
-                    mahasiswa = homeUiState.mahasiswa,modifier = modifier.fillMaxWidth(),
+                    mahasiswa = homeUiState.mahasiswa, modifier = modifier.fillMaxWidth(),
                     onDetailClick = {
                         onDetailClick(it.nim)
                     },
-                    onDeleteClick={
+                    onDeleteClick = {
                         onDeleteClick(it)
                     }
                 )
             }
+
         is HomeUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
     }
 }
 
-
-
-
+/**
+ * The home screen displaying the loading message.
+ */
 @Composable
 fun OnLoading(modifier: Modifier = Modifier) {
     Image(
@@ -132,6 +134,9 @@ fun OnLoading(modifier: Modifier = Modifier) {
     )
 }
 
+/**
+ * The home screen displaying error message with re-attempt button.
+ */
 @Composable
 fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
     Column(
@@ -172,6 +177,7 @@ fun MhsLayout(
                     onDeleteClick(mahasiswa)
                 }
             )
+
         }
     }
 }
@@ -224,4 +230,3 @@ fun MhsCard(
         }
     }
 }
-
