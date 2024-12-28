@@ -42,6 +42,7 @@ import com.hariwr.praktikum12.navigation.CostumeTopAppBar
 import com.hariwr.praktikum12.navigation.DestinasiNavigasi
 import com.hariwr.praktikum12.ui.viewmodel.HomeUiState
 import com.hariwr.praktikum12.ui.viewmodel.HomeViewModel
+import com.hariwr.praktikum12.ui.viewmodel.PenyediaViewModel
 
 object DestinasiHome : DestinasiNavigasi {
     override val route = "home"
