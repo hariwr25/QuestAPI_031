@@ -1,4 +1,4 @@
-package com.hariwr.praktikum12.container
+package com.hariwr.praktikum12.dependeciesinjection
 
 import com.hariwr.praktikum12.repository.MahasiswaRepository
 import com.hariwr.praktikum12.repository.NetworkMahasiswaRepository
