@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hariwr.praktikum12.data.Mahasiswa
 import com.hariwr.praktikum12.repository.MahasiswaRepository
 import kotlinx.coroutines.launch
 
@@ -35,4 +36,14 @@ data class DetailUiState(
 ){
     val isUiEventNotEmpty: Boolean
         get() = detailUiEvent != InsertUiEvent()
+}
+fun Mahasiswa.toDetailEvent(): InsertUiEvent{
+    return InsertUiEvent(
+        nim = nim,
+        nama = nama,
+        alamat = alamat,
+        jenisKelamin = jenisKelamin,
+        kelas = kelas,
+        angkatan = angkatan,
+    )
 }
