@@ -45,17 +45,17 @@ import com.hariwr.praktikum12.ui.viewmodel.HomeViewModel
 import com.hariwr.praktikum12.ui.viewmodel.PenyediaViewModel
 
 object DestinasiHome : DestinasiNavigasi {
-    override val route = "home"
+    override val route = "Home"
     override val titleRes = "Home Mhs"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    navigateToltemEntry: () -> Unit,
     modifier: Modifier = Modifier,
     onDetailClick: (String) -> Unit = {},
-    viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory),
-    navigateToltemEntry: () -> Unit
+    viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
@@ -72,7 +72,7 @@ fun HomeScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = navigateToItemEntry,
+                onClick = navigateToltemEntry,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(18.dp)
             ) {
@@ -88,6 +88,7 @@ fun HomeScreen(
                 viewModel.getMhs()
             }
         )
+
     }
 }
 
@@ -102,14 +103,16 @@ fun HomeStatus(
     when (homeUiState) {
         is HomeUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
 
+
         is HomeUiState.Success ->
             if (homeUiState.mahasiswa.isEmpty()) {
                 return Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Tidak ada data kontak")
+                    Text(text = "Tidak ada data Kontak")
                 }
             } else {
                 MhsLayout(
-                    mahasiswa = homeUiState.mahasiswa, modifier = modifier.fillMaxWidth(),
+                    mahasiswa = homeUiState.mahasiswa,
+                    modifier = modifier.fillMaxWidth(),
                     onDetailClick = {
                         onDetailClick(it.nim)
                     },
@@ -123,21 +126,15 @@ fun HomeStatus(
     }
 }
 
-/**
- * The home screen displaying the loading message.
- */
 @Composable
 fun OnLoading(modifier: Modifier = Modifier) {
     Image(
         modifier = modifier.size(200.dp),
-        painter = painterResource(R.drawable.ic_connection_error),
+        painter = painterResource(R.drawable.loading),
         contentDescription = stringResource(R.string.loading)
     )
 }
 
-/**
- * The home screen displaying error message with re-attempt button.
- */
 @Composable
 fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
     Column(
@@ -146,12 +143,15 @@ fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_connection_error), contentDescription = ""
+            painter = painterResource(id = R.drawable.ic_connection_error),
+            contentDescription = ""
         )
-
-        Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
+        Text(
+            text = stringResource(id = R.string.loading_failed),
+            modifier = Modifier.padding(16.dp)
+        )
         Button(onClick = retryAction) {
-            Text(stringResource(R.string.retry))
+            Text(stringResource(id = R.string.retry))
         }
     }
 }
@@ -178,7 +178,6 @@ fun MhsLayout(
                     onDeleteClick(mahasiswa)
                 }
             )
-
         }
     }
 }
@@ -195,8 +194,7 @@ fun MhsCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.padding(8.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -210,24 +208,25 @@ fun MhsCard(
                 IconButton(onClick = { onDeleteClick(mahasiswa) }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = null,
+                        contentDescription = null
                     )
                 }
-
                 Text(
                     text = mahasiswa.nim,
                     style = MaterialTheme.typography.titleMedium
                 )
+                Text(
+                    text = mahasiswa.kelas,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = mahasiswa.alamat,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+
             }
 
-            Text(
-                text = mahasiswa.kelas,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = mahasiswa.alamat,
-                style = MaterialTheme.typography.titleMedium
-            )
         }
     }
 }
